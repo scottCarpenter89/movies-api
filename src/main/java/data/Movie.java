@@ -2,7 +2,7 @@ package data;
 
 public class Movie {
     private String title;
-    private long rating;
+    private double rating;
     private String poster;
     private long year;
     private String genre;
@@ -11,7 +11,7 @@ public class Movie {
     private String actors;
     private long id;
 
-    public Movie(String title, long rating, String poster, long year, String genre, String director, String plot, String actors, long id) {
+    public Movie(String title, double rating, String poster, long year, String genre, String director, String plot, String actors, long id) {
         this.title = title;
         this.rating = rating;
         this.poster = poster;
@@ -34,11 +34,11 @@ public class Movie {
         this.title = title;
     }
 
-    public long getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(long rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
