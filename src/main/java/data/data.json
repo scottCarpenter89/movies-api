@@ -1,0 +1,33 @@
+
+[
+{
+  "title": "Fight Club",
+  "rating": 8.8,
+  "poster": "https://www.imdb.com/title/tt0137523/mediaviewer/rm2110056193/",
+  "year": 1999,
+  "genre": "Drama",
+  "director": "David Fincher",
+  "plot": "An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into much more.",
+  "actors": "Brad Pitt, Edward Norton, Meat Loaf"
+},
+{
+"title": "Casino Royale",
+"rating": 8.0,
+"poster": "https://www.imdb.com/title/tt0381061/mediaviewer/rm3667992064/",
+"year": 2006,
+"genre": "Action, Adventure, Thriller",
+"director": "Martin Campbell",
+"plot": "After earning 00 status and a licence to kill, secret agent James Bond sets out on his first mission as 007. Bond must defeat a private banker funding terrorists in a high-stakes game of poker at Casino Royale, Montenegro.",
+"actors": "Daniel Craig, Eva Green, Judy Dench"
+},
+{
+"title": "Saving Private Ryan",
+"rating": 8.6,
+"poster": "https://www.imdb.com/title/tt0120815/mediaviewer/rm1924732160/",
+"year": 1998,
+"genre": "Drama, War",
+"director": "Steven Spielberg",
+"plot": "Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action.",
+"actors": "Tom Hanks, Matt Damon, Tom Sizemore"
+}
+]

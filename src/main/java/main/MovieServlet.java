@@ -3,6 +3,7 @@ package main;
 import com.google.gson.Gson;
 import data.Movie;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
+
 
 @WebServlet(name = "MovieServlet", urlPatterns = "/movies/*")
 
@@ -56,16 +59,77 @@ public class MovieServlet extends HttpServlet {
     protected void doPut (HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
 
+        BufferedReader br = request.getReader();
+
+        Movie updatedMovie = new Gson().fromJson(br, Movie.class);
+        try {
+            PrintWriter out = response.getWriter();
+
+            String [] uriParts = request.getRequestURI().split("/");
+            int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
+
+            for (Movie movie : movies) {
+                if (movie.getId() == targetId) {
+                    if (updatedMovie.getTitle() != null) {
+                        movie.setId(updatedMovie.getId());
+                    }
+                    if (updatedMovie.getRating() != null) {
+                        movie.setRating(updatedMovie.getRating());
+                    }
+                    if (updatedMovie.getPoster() != null) {
+                       movie.setPoster(updatedMovie.getPoster());
+                    }
+                    if (updatedMovie.getYear() != null) {
+                        movie.setYear(updatedMovie.getYear());
+                    }
+                    if (updatedMovie.getGenre() != null) {
+                        movie.setGenre(updatedMovie.getGenre());
+                    }
+                    if (updatedMovie.getDirector() != null) {
+                        movie.setDirector(updatedMovie.getDirector());
+                    }
+                    if (updatedMovie.getPlot() != null) {
+                        movie.setPlot(updatedMovie.getPlot());
+                    }
+                    if (updatedMovie.getActors() != null) {
+                        movie.setActors(updatedMovie.getActors());
+                    }
+                }
+            }
+            out.println(updatedMovie);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+
+        BufferedReader br = request.getReader();
+
+        Movie deleteMovie = new Gson().fromJson(br, Movie.class);
 
         try {
             PrintWriter out = response.getWriter();
+
             String [] uriParts = request.getRequestURI().split("/");
             int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
-          //TODO
-            // iterate over the movies ArrayList
-                // if the targetId equals the getId of the current index,
-                    // then we need to edit the Movie object fields
-            out.println("Movie(s) edited");
+
+            Movie foundMovie = null;
+        for (Movie movie : movies) {
+            if (movie.getId() == targetId) {
+                foundMovie = movie;
+                break;
+            }
+        }
+        if (foundMovie != null) {
+            movies.remove(foundMovie);
+        }
+            out.println(targetId);
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
