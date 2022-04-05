@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class MovieServlet extends HttpServlet {
 
     ArrayList<Movie> movies = new ArrayList<>();
-    long nextId = 1;
+    int nextId = 1;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -47,6 +47,25 @@ public class MovieServlet extends HttpServlet {
         try {
             PrintWriter out = response.getWriter();
             out.println("Movie(s) added!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void doPut (HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+
+
+        try {
+            PrintWriter out = response.getWriter();
+            String [] uriParts = request.getRequestURI().split("/");
+            int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
+          //TODO
+            // iterate over the movies ArrayList
+                // if the targetId equals the getId of the current index,
+                    // then we need to edit the Movie object fields
+            out.println("Movie(s) edited");
         } catch (IOException e) {
             e.printStackTrace();
         }
