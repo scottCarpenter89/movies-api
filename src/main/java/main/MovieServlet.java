@@ -1,7 +1,6 @@
 package main;
 
 import com.google.gson.Gson;
-import data.Movie;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,128 +10,98 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static main.MoviesDaoFactory.getMoviesDao;
 
 
 @WebServlet(name = "MovieServlet", urlPatterns = "/movies/*")
 
 public class MovieServlet extends HttpServlet {
 
-    ArrayList<Movie> movies = new ArrayList<>();
-    int nextId = 1;
+//    ArrayList<Movie> movies = new ArrayList<>();
+//    int nextId = 1;
+    MoviesDao moviesDao;
+
+    public MovieServlet(MoviesDao moviesDao) {
+        this.moviesDao = moviesDao;
+    }
+
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
-        try {
-            PrintWriter out = response.getWriter();
-            String movieString = new Gson().toJson(movies.toArray());
-            out.println(movieString);
+        PrintWriter out = response.getWriter();
 
-        } catch (IOException e) {
+        try{
+            out.println(new Gson().toJson(
+                    moviesDao.all()));
+        }catch(SQLException e){
             e.printStackTrace();
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json");
-
-        BufferedReader br = request.getReader();
-
-        Movie[] newMovie = new Gson().fromJson(br, Movie[].class);
-        for (Movie movie : newMovie) {
-            movie.setId(nextId++);
-            movies.add(movie);
-        }
+        Movie [] movies = new Gson().fromJson(request.getReader(), Movie[].class);
+        PrintWriter out = response.getWriter();
 
         try {
-            PrintWriter out = response.getWriter();
-            out.println("Movie(s) added!");
-        } catch (IOException e) {
+            moviesDao.insertAll(movies);
+            response.setContentType("application/json");
+            out.println("movie(s) added!");
+        } catch (SQLException e) {
+            out.println(new Gson().toJson(e.getLocalizedMessage()));
+            response.setStatus(500);
             e.printStackTrace();
+            return;
         }
+        out.println(new Gson().toJson("{message: \"Movies POST was successful\"}"));
+        response.setStatus(200);
     }
 
     @Override
     protected void doPut (HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
 
-        BufferedReader br = request.getReader();
-
-        Movie updatedMovie = new Gson().fromJson(br, Movie.class);
         try {
-            PrintWriter out = response.getWriter();
-
-            String [] uriParts = request.getRequestURI().split("/");
-            int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
-
-            for (Movie movie : movies) {
-                if (movie.getId() == targetId) {
-                    if (updatedMovie.getTitle() != null) {
-                        movie.setId(updatedMovie.getId());
-                    }
-                    if (updatedMovie.getRating() != null) {
-                        movie.setRating(updatedMovie.getRating());
-                    }
-                    if (updatedMovie.getPoster() != null) {
-                       movie.setPoster(updatedMovie.getPoster());
-                    }
-                    if (updatedMovie.getYear() != null) {
-                        movie.setYear(updatedMovie.getYear());
-                    }
-                    if (updatedMovie.getGenre() != null) {
-                        movie.setGenre(updatedMovie.getGenre());
-                    }
-                    if (updatedMovie.getDirector() != null) {
-                        movie.setDirector(updatedMovie.getDirector());
-                    }
-                    if (updatedMovie.getPlot() != null) {
-                        movie.setPlot(updatedMovie.getPlot());
-                    }
-                    if (updatedMovie.getActors() != null) {
-                        movie.setActors(updatedMovie.getActors());
-                    }
-                }
-            }
-            out.println(updatedMovie);
-        } catch (IOException e) {
+            Movie movie = new Gson().fromJson(request.getReader(), Movie.class);
+            moviesDao.update(movie);
+        } catch (SQLException e) {
+            out.println(new Gson().toJson(e.getLocalizedMessage()));
+            response.setStatus(500);
             e.printStackTrace();
+            return;
+        } catch (Exception e) {
+            out.println(new Gson().toJson(e.getLocalizedMessage()));
+            response.setStatus(400);
+            e.printStackTrace();
+            return;
         }
+
+        out.println(new Gson().toJson("{message: \"Movie UPDATE was successful\"}"));
+        response.setStatus(200);
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-
-        BufferedReader br = request.getReader();
-
-        Movie deleteMovie = new Gson().fromJson(br, Movie.class);
+        PrintWriter out = response.getWriter();
 
         try {
-            PrintWriter out = response.getWriter();
-
-            String [] uriParts = request.getRequestURI().split("/");
-            int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
-
-            Movie foundMovie = null;
-        for (Movie movie : movies) {
-            if (movie.getId() == targetId) {
-                foundMovie = movie;
-                break;
-            }
-        }
-        if (foundMovie != null) {
-            movies.remove(foundMovie);
-        }
-            out.println(targetId);
-
-
-
-        } catch (IOException e) {
+            int id = new Gson().fromJson(request.getReader(), int.class);
+            moviesDao.delete(id);
+        } catch (SQLException e) {
+            out.println(new Gson().toJson(e.getLocalizedMessage()));
+            response.setStatus(500);
             e.printStackTrace();
+            return;
         }
+
+        out.println(new Gson().toJson("{message: \"Movie DELETE was successful\"}"));
+        response.setStatus(200);
     }
 }
 
