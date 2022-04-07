@@ -2,7 +2,7 @@ package config;
 
 public class Config {
     public String getUrl() {
-        return "jdbc:mariadb://emp.fulgentcorp.com:3306/scott?allowPublicKeyRetrieval=true&useSSL=false";
+        return "jdbc:mysql://emp.fulgentcorp.com:3306/scott?allowPublicKeyRetrieval=true&useSSL=false";
     }
 
     public String getUser() {
