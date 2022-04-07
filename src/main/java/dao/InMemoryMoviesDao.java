@@ -1,9 +1,8 @@
-package data;
+package dao;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import main.Movie;
-import main.MoviesDao;
+import data.Movie;
 
 import java.io.IOException;
 import java.io.Reader;

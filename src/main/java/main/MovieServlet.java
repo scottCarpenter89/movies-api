@@ -1,33 +1,28 @@
 package main;
 
 import com.google.gson.Gson;
+import dao.InMemoryMoviesDao;
+import dao.MoviesDao;
+import data.Movie;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import static main.MoviesDaoFactory.getMoviesDao;
 
 
 @WebServlet(name = "MovieServlet", urlPatterns = "/movies/*")
 
 public class MovieServlet extends HttpServlet {
+    private InMemoryMoviesDao dao = new InMemoryMoviesDao();
 
-//    ArrayList<Movie> movies = new ArrayList<>();
-//    int nextId = 1;
-    MoviesDao moviesDao;
-
-    public MovieServlet(MoviesDao moviesDao) {
-        this.moviesDao = moviesDao;
+    public MovieServlet(InMemoryMoviesDao dao) {
+        this.dao = dao;
     }
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -36,7 +31,7 @@ public class MovieServlet extends HttpServlet {
 
         try{
             out.println(new Gson().toJson(
-                    moviesDao.all()));
+                    dao.all()));
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -44,11 +39,11 @@ public class MovieServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Movie [] movies = new Gson().fromJson(request.getReader(), Movie[].class);
+        Movie[] movies = new Gson().fromJson(request.getReader(), Movie[].class);
         PrintWriter out = response.getWriter();
 
         try {
-            moviesDao.insertAll(movies);
+            dao.insertAll(movies);
             response.setContentType("application/json");
             out.println("movie(s) added!");
         } catch (SQLException e) {
@@ -68,7 +63,7 @@ public class MovieServlet extends HttpServlet {
 
         try {
             Movie movie = new Gson().fromJson(request.getReader(), Movie.class);
-            moviesDao.update(movie);
+            dao.update(movie);
         } catch (SQLException e) {
             out.println(new Gson().toJson(e.getLocalizedMessage()));
             response.setStatus(500);
@@ -92,7 +87,7 @@ public class MovieServlet extends HttpServlet {
 
         try {
             int id = new Gson().fromJson(request.getReader(), int.class);
-            moviesDao.delete(id);
+            dao.delete(id);
         } catch (SQLException e) {
             out.println(new Gson().toJson(e.getLocalizedMessage()));
             response.setStatus(500);
