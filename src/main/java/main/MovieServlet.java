@@ -1,8 +1,10 @@
 package main;
 
 import com.google.gson.Gson;
+import config.Config;
 import dao.InMemoryMoviesDao;
 import dao.MoviesDao;
+import dao.MySqlMoviesDao;
 import data.Movie;
 
 import javax.servlet.ServletException;
@@ -18,21 +20,20 @@ import java.sql.SQLException;
 @WebServlet(name = "MovieServlet", urlPatterns = "/movies/*")
 
 public class MovieServlet extends HttpServlet {
-    private InMemoryMoviesDao dao = new InMemoryMoviesDao();
 
-    public MovieServlet(InMemoryMoviesDao dao) {
-        this.dao = dao;
-    }
+    Config config = new Config();
+    private final MySqlMoviesDao dao = new MySqlMoviesDao(config);
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
-        try{
+        try {
             out.println(new Gson().toJson(
                     dao.all()));
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -57,7 +58,7 @@ public class MovieServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPut (HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
 
