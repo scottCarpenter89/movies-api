@@ -102,18 +102,46 @@ public class MySqlMoviesDao implements MoviesDao{
 
     @Override
     public void update(Movie movie) throws SQLException {
-        StringBuilder sql = new StringBuilder ("UPDATE movies SET title = ?, rating = ?, poster = ?, year = ?, genre = ?, director = ?, plot = ?, actors = ? WHERE id = ?");
+        String sql = "UPDATE movies SET ";
 
-    PreparedStatement stmt = connection.prepareStatement(sql.toString());
+    PreparedStatement stmt = connection.prepareStatement(sql);
+    if (movie.getTitle() != null) {
+        sql += "title = ?, ";
         stmt.setString(1, movie.getTitle());
-        stmt.setDouble(2, movie.getRating());
-        stmt.setString(3, movie.getPoster());
-        stmt.setInt(4, movie.getYear());
-        stmt.setString(5, movie.getGenre());
-        stmt.setString(6, movie.getDirector());
-        stmt.setString(7, movie.getPlot());
-        stmt.setString(8, movie.getActors());
+    }
+        if (movie.getTitle() != null) {
+            sql += "rating = ?, ";
+            stmt.setDouble(2, movie.getRating());
+        }
+        if (movie.getPoster() != null) {
+            sql += "poster = ?, ";
+            stmt.setString(3, movie.getPoster());
+        }
+        if (movie.getYear() != null) {
+            sql += "year = ?, ";
+            stmt.setInt(4, movie.getYear());
+        }
+        if (movie.getGenre() != null) {
+            sql += "genre = ?, ";
+            stmt.setString(5, movie.getGenre());
+        }
+        if (movie.getDirector() != null) {
+            sql += "director = ?, ";
+            stmt.setString(6, movie.getDirector());
+        }
+        if (movie.getPlot() != null) {
+            sql += "plot = ?, ";
+            stmt.setString(7, movie.getPlot());
+        }
+        if (movie.getActors() != null) {
+            sql += "actors = ?, ";
+            stmt.setString(8, movie.getActors());
+        }
+
+           String sql2 = sql + "WHERE id = ?";
         stmt.setLong(9, movie.getId());
+
+
 
         stmt.executeUpdate();
     }
