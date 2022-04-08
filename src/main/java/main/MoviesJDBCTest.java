@@ -3,7 +3,7 @@ package main;
 import com.mysql.cj.jdbc.Driver;
 import config.Config;
 import data.Movie;
-
+import dao.MySqlMoviesDao;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -38,6 +38,10 @@ public class MoviesJDBCTest {
         while(rs.next()) {
             System.out.printf("New movie(s) have been added! New id: %s", rs);
         }
+
+
         connection.close();
+
     }
+
 }

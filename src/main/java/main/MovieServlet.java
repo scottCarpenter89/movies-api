@@ -99,5 +99,10 @@ public class MovieServlet extends HttpServlet {
         out.println(new Gson().toJson("{message: \"Movie DELETE was successful\"}"));
         response.setStatus(200);
     }
+
+    @Override
+    public void destroy() {
+        dao.cleanUp();
+    }
 }
 
