@@ -120,7 +120,10 @@ public class MySqlMoviesDao implements MoviesDao{
 
     @Override
     public void delete(int id) throws SQLException {
-
+        String sql = "DELETE FROM movies WHERE id = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1, id);
+        statement.execute();
     }
 
     public void cleanUp() {
