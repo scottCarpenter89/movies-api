@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import config.Config;
 import dao.InMemoryMoviesDao;
 import dao.MoviesDao;
+import dao.MoviesDaoFactory;
 import dao.MySqlMoviesDao;
 import data.Movie;
 
@@ -16,13 +17,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
+import static dao.MoviesDaoFactory.DAOType.MYSQL;
+import static dao.MoviesDaoFactory.getMoviesDao;
+
 
 @WebServlet(name = "MovieServlet", urlPatterns = "/movies/*")
 
 public class MovieServlet extends HttpServlet {
 
-    Config config = new Config();
-    private final MySqlMoviesDao dao = new MySqlMoviesDao(config);
+     MoviesDao dao = getMoviesDao(MYSQL);
 
 
     @Override

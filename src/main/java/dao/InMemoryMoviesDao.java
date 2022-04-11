@@ -78,4 +78,13 @@ public class InMemoryMoviesDao implements MoviesDao {
 
     }
 
+    @Override
+    public void cleanUp() {
+//        System.out.println("Closing connection....");
+//        try {
+//            connection.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+    }
 }

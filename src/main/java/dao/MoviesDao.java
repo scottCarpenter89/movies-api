@@ -18,4 +18,5 @@ public interface MoviesDao {
     void update(Movie movie) throws SQLException;
 
     void delete(int id) throws SQLException;
+    void cleanUp();
 }
