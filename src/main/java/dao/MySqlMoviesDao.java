@@ -102,48 +102,21 @@ public class MySqlMoviesDao implements MoviesDao{
 
     @Override
     public void update(Movie movie) throws SQLException {
-        String sql = "UPDATE movies SET ";
+        String sql = "UPDATE movies SET title = ?, rating = ?, poster = ?, year = ?, genre = ?, director = ?, plot = ?, actors = ?" +
+                " WHERE id = ?";
 
-    PreparedStatement stmt = connection.prepareStatement(sql);
-    if (movie.getTitle() != null) {
-        sql += "title = ?, ";
-        stmt.setString(1, movie.getTitle());
-    }
-        if (movie.getTitle() != null) {
-            sql += "rating = ?, ";
-            stmt.setDouble(2, movie.getRating());
-        }
-        if (movie.getPoster() != null) {
-            sql += "poster = ?, ";
-            stmt.setString(3, movie.getPoster());
-        }
-        if (movie.getYear() != null) {
-            sql += "year = ?, ";
-            stmt.setInt(4, movie.getYear());
-        }
-        if (movie.getGenre() != null) {
-            sql += "genre = ?, ";
-            stmt.setString(5, movie.getGenre());
-        }
-        if (movie.getDirector() != null) {
-            sql += "director = ?, ";
-            stmt.setString(6, movie.getDirector());
-        }
-        if (movie.getPlot() != null) {
-            sql += "plot = ?, ";
-            stmt.setString(7, movie.getPlot());
-        }
-        if (movie.getActors() != null) {
-            sql += "actors = ?, ";
-            stmt.setString(8, movie.getActors());
-        }
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, movie.getTitle());
+        statement.setDouble(2, movie.getRating());
+        statement.setString(3, movie.getPoster());
+        statement.setInt(4, movie.getYear());
+        statement.setString(5, movie.getGenre());
+        statement.setString(6, movie.getDirector());
+        statement.setString(7, movie.getPlot());
+        statement.setString(8, movie.getActors());
+        statement.setLong(9, movie.getId());
 
-           String sql2 = sql + "WHERE id = ?";
-        stmt.setLong(9, movie.getId());
-
-
-
-        stmt.executeUpdate();
+        statement.executeUpdate();
     }
 
     @Override
