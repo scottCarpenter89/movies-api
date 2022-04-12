@@ -26,17 +26,25 @@ import static dao.MoviesDaoFactory.getMoviesDao;
 
 public class MovieServlet extends HttpServlet {
 
-     private MoviesDao dao = getMoviesDao(MYSQL);
+    private MoviesDao dao = getMoviesDao(MYSQL);
 
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
+        String[] uriParts = request.getRequestURI().split("/");
+
 
         try {
-            out.println(new Gson().toJson(
-                    dao.all()));
+            if (isNumericString(uriParts[uriParts.length - 1])) {
+                int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
+                out.println(new Gson().toJson(dao.findOne(targetId)));
+            } else {
+                out.println(new Gson().toJson(
+                        dao.all()));
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -65,7 +73,7 @@ public class MovieServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        String [] uriParts = request.getRequestURI().split("/");
+        String[] uriParts = request.getRequestURI().split("/");
         int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
         try {
             Movie movie = new Gson().fromJson(request.getReader(), Movie.class);
@@ -91,7 +99,7 @@ public class MovieServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        String [] uriParts = request.getRequestURI().split("/");
+        String[] uriParts = request.getRequestURI().split("/");
         int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
         try {
             dao.delete(targetId);
@@ -109,10 +117,19 @@ public class MovieServlet extends HttpServlet {
     @Override
     public void destroy() {
         try {
-        dao.cleanUp();
+            dao.cleanUp();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isNumericString(String aString) {
+        try {
+            double d = Double.parseDouble(aString);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }
 

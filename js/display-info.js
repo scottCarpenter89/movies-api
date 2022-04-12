@@ -31,9 +31,9 @@ function showMovies(data) {
                     <div class="actors card-text">Actors: ${id.actors}</div>
                 </div>
                 <div class="card-footer">
-                    <a href="#" data-id="${id.id}" class="btn btn-outline-success float-right edit-information-btn"
+                    <a href="#" data-id="${id.id}" class="edit-information-btn btn btn-outline-success float-right edit-information-btn"
                        data-toggle="modal"
-                       data-target="#editInfo">Edit This movie</a>
+                       data-target="#editInfo">Edit</a>
                 </div>
             </div>
         `

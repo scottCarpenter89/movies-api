@@ -1,9 +1,9 @@
 //TODO: when button is pressed it will display the information in the form as well as give an attr to submit button
 $(document).on('click', '.edit-information-btn', function () {
-    let dataId = $(this).data('id')
-    $('.edit-btn').attr('data-id', dataId)
-    $('#form-id').val(dataId)
-    fetchModalFields(dataId)
+    let dataId = $(this).data('id');
+    $('.edit-btn').attr('data-id', dataId);
+    $('#form-id').val(dataId);
+
 });
 
 //TODO: when button is pressed it will send data to the server and change the users input

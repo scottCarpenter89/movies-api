@@ -1,7 +1,7 @@
 "use strict";
 
 //TODO: create function to get data from database
-getAllMovies()
+getAllMovies();
 
 function getAllMovies() {
     //language=html
@@ -14,7 +14,13 @@ function getAllMovies() {
     fetch(dataBaseUrl)
         .then(res => res.json()
             .then(movies => showMovies(movies))
-            .then(() => $('body').css('background-color', '#708090')))
+            .then(() => {
+                $('body').css('background-color', '#708090');
+                $('.edit-information-btn').click(function () {
+                    // console.log($(this).data('id'));
+                    fetchModalFields($(this).data('id'));
+                })
+            }))
 }
 
 //TODO: function to sort title on the web browser
@@ -123,7 +129,7 @@ function deleteMovieFromList(id) {
 //TODO: Create function that will change information within the API
 function changeInformation(id) {
 
-    var genreArray = [];
+    let genreArray = [];
     $.each($("input[name='genres']:checked"), function () {
         genreArray.push($(this).val());
     });
@@ -146,7 +152,7 @@ function changeInformation(id) {
         },
         body: JSON.stringify(change)
     }
-    console.log(JSON.stringify(change));
+
     fetch(`${dataBaseUrl}/${id}`, putRequest)
         .then(res => res.json()
             .then(() => {
