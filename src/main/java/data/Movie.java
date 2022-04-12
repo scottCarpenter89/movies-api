@@ -9,9 +9,9 @@ public class Movie {
     private String director;
     private String plot;
     private String actors;
-    private long id;
+    private int id;
 
-    public Movie(String title, Double rating, String poster, Integer year, String genre, String director, String plot, String actors, long id) {
+    public Movie(String title, Double rating, String poster, Integer year, String genre, String director, String plot, String actors, int id) {
         this.title = title;
         this.rating = rating;
         this.poster = poster;
@@ -90,11 +90,11 @@ public class Movie {
         this.actors = actors;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

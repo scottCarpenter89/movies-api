@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static dao.MoviesDaoFactory.DAOType.MYSQL;
 import static dao.MoviesDaoFactory.getMoviesDao;
@@ -25,7 +26,7 @@ import static dao.MoviesDaoFactory.getMoviesDao;
 
 public class MovieServlet extends HttpServlet {
 
-     MoviesDao dao = getMoviesDao(MYSQL);
+     private MoviesDao dao = getMoviesDao(MYSQL);
 
 
     @Override
@@ -45,7 +46,7 @@ public class MovieServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Movie[] movies = new Gson().fromJson(request.getReader(), Movie[].class);
         PrintWriter out = response.getWriter();
-
+        System.out.println(Arrays.toString(movies));
         try {
             dao.insertAll(movies);
             response.setContentType("application/json");
@@ -64,9 +65,11 @@ public class MovieServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-
+        String [] uriParts = request.getRequestURI().split("/");
+        int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
         try {
             Movie movie = new Gson().fromJson(request.getReader(), Movie.class);
+            movie.setId(targetId);
             dao.update(movie);
         } catch (SQLException e) {
             out.println(new Gson().toJson(e.getLocalizedMessage()));
@@ -88,10 +91,10 @@ public class MovieServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-
+        String [] uriParts = request.getRequestURI().split("/");
+        int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
         try {
-            int id = new Gson().fromJson(request.getReader(), int.class);
-            dao.delete(id);
+            dao.delete(targetId);
         } catch (SQLException e) {
             out.println(new Gson().toJson(e.getLocalizedMessage()));
             response.setStatus(500);
@@ -105,7 +108,11 @@ public class MovieServlet extends HttpServlet {
 
     @Override
     public void destroy() {
+        try {
         dao.cleanUp();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 
